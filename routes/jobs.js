@@ -1,21 +1,15 @@
 import express from "express";
 import Job from "../models/Job.js";
+import sendEmail from "../utils/sendEmail.js";
 
 const router = express.Router();
 
-/**
- * POST /api/jobs
- * Create a new job submission
- */
 router.post("/", async (req, res) => {
   try {
     const { name, email, description, timeline, budget } = req.body;
 
-    // Basic validation
     if (!name || !email || !description || !timeline || !budget) {
-      return res.status(400).json({
-        message: "All fields are required",
-      });
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     const job = new Job({
@@ -28,14 +22,13 @@ router.post("/", async (req, res) => {
 
     await job.save();
 
-    res.status(201).json({
-      message: "Job submitted successfully",
-    });
+    // 🔥 Send email notification
+    await sendEmail(job);
+
+    res.status(201).json({ message: "Job submitted successfully" });
   } catch (error) {
     console.error("Job submission error:", error);
-    res.status(500).json({
-      message: "Server error submitting job",
-    });
+    res.status(500).json({ message: "Server error submitting job" });
   }
 });
 
