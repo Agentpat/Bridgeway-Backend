@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import jobsRoute from "./routes/jobs.js";
+import adminRoute from "./routes/admin.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/jobs", jobsRoute);
+app.use("/api/admin", adminRoute);
 
 // Health check
 app.get("/", (req, res) => {
